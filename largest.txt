@@ -1,0 +1,103 @@
+7. Largest cycle in a tree
+
+You are given a tree of N nodes and N-1 edges. Now you need to select two nodes a
+and b in the tree such that the cycle that will be formed after adding an edge between
+the two nodes a and b, its length should be maximum. If there are more than one
+possible answer, you can output any of them.
+
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+ 
+int main(int argc, char const *argv[]) {
+ 
+  ll t = 1;
+ 
+  while (t--) {
+ 
+    ll n, a, b, d;
+    std::cin >> n;
+    ll temp[n+1], hold[n+1];
+    memset(temp, -1, sizeof(temp));
+    memset(hold, -1, sizeof(hold));
+    std::map<ll, std::vector<int>> mp;
+ 
+    for (size_t i = 1; i < n; i++) {
+      {
+        std::cin >> a>>b;
+        mp[a].push_back(b);
+        mp[b].push_back(a);
+      }
+    }
+    temp[1] = 0;
+    queue<ll>q;
+    q.push(1);
+ 
+    while (!q.empty()) {
+ 
+      d = q.size();
+ 
+      for (size_t i = 0; i < d; i++) {
+ 
+        ll val = q.front();
+        q.pop();
+ 
+        for(auto it:mp[val]){
+          if (temp[it] == -1) {
+            temp[it] = temp[val] + 1;
+            q.push(it);
+          }
+        }
+      }
+    }
+ 
+    ll mx = 0;
+    for (size_t i = 0; i <= n; i++) {
+      if(temp[mx] < temp[i])
+      mx = i;
+    }
+    std::cout << mx << ' ';
+    hold[mx] = 0;
+    q.push(mx);
+ 
+    while (!q.empty()) {
+ 
+      d = q.size();
+ 
+      for (size_t i = 0; i < d; i++) {
+        ll val = q.front();
+        q.pop();
+ 
+        for(auto it:mp[val]){
+          if(hold[it] == -1){
+            hold[it] = hold[val] + 1;
+            q.push(it);
+          }
+        }
+      }
+    }
+    mx = 0;
+    for (size_t i = 0; i <= n; i++) {
+      if(hold[mx] < hold[i])
+      mx = i;
+    }
+    std::cout << mx << '\n';
+  }
+  return 0;
+}
+
+
+Input:
+7
+1 2
+1 3
+2 4
+2 5
+3 6
+3 7
+
+
+Output:
+
+4 6
